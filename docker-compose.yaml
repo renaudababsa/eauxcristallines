@@ -1,0 +1,31 @@
+version: '3'
+services:
+  app:
+    depends_on:
+      - db
+    build:
+      context: ./project
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    networks:
+      - eco4marseille
+
+  db:
+    image: mysql:5.7
+    env_file: ./.env
+    environment:
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    volumes:
+      - my-db:/var/lib/mysql
+    networks:
+      - eco4marseille
+volumes:
+  my-db:
+networks:
+  eco4marseille:
+    driver: bridge
